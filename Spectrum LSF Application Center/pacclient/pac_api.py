@@ -102,9 +102,9 @@ def downloadFile(srcName, dstPath, jobId, cmd):
 	
 	url_file = url + 'webservice/pacclient/file/' + jobId
 	if cmd == '':
-		body=getFileNameByFullPath(srcName)
+		body=srcName
 	else:
-		body=getFileNameByFullPath(srcName) + '|' + cmd
+		body=srcName + '|' + cmd
 
 	headers = {'Content-Type': 'text/plain', 'Cookie': 'platform_token=' + token, 
 		'Accept': ACCEPT_TYPE, 'Accept-Language': getSysLocale().replace("_", "-").lower()}
