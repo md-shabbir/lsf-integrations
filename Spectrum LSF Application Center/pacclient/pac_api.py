@@ -117,6 +117,9 @@ def downloadFile(srcName, dstPath, jobId, cmd):
 		response, contentb = http.request(url_file, 'GET', body=body, headers=headers)
 		content = contentb.decode()
 		
+		if response['status'] == '401':
+			printAuthError()
+
 		# Check response content
 		if len(content) <= 0:
 			fileName = getFileNameByFullPath(srcName)
@@ -246,6 +249,8 @@ def downloadJobFiles(jobId, dstPath, dFile, cmd):
 			print(content)
 			return
 		if (response['status'] != '200'):
+			if response['status'] == '401':
+				printAuthError()
 			print ( _getmsg("connect_ws_err") % url )
 			return
 		
@@ -520,6 +525,8 @@ def uploadLargeFile(jobId, dstPath, dFile):
 				print(content)
 				return
 			if response['status'] != '200':
+				if response['status'] == '401':
+					printAuthError()
 				print ( _getmsg("uploadfailed_connectws") )
 				return
 		except AttributeError:
@@ -569,6 +576,8 @@ def uploadJobFiles(jobId, dstPath, dFile):
 		if response['status'] == '200':
 			print(content.decode())
 		else:
+			if response['status'] == '401':
+				printAuthError()
 			print ( _getmsg("uploadfailed_connectws") )
 	except AttributeError:
 		print ( _getmsg("connect_ws_err") % url )
@@ -760,6 +769,8 @@ def getJobListInfo(parameter):
 			else:
 				return 'ok', content
 		else:
+			if response['status'] == '401':
+				printAuthError()
 			return 'error', _getmsg("failed_connect_wsurl") % url_job
 	except (AttributeError, ExpatError):
 		return 'error', _getmsg("connect_ws_err") % url 
@@ -992,6 +1003,8 @@ def submitJob(jobDict):
 				err=xdoc.getElementsByTagName(ERROR_STR)
 				return 'error', err[0].childNodes[0].nodeValue
 		else:
+			if response['status'] == '401':
+				printAuthError()
 			return 'error', _getmsg("failed_connws_submit")
 	except (AttributeError, ExpatError):
 		return 'error', _getmsg("connect_ws_err") % url
@@ -1031,6 +1044,8 @@ def doJobAction(jobAction, jobId):
 			else:
 				return 'error', _getmsg("failed_connws_logon")
 		else:
+			if response['status'] == '401':
+				printAuthError()
 			return 'error', _getmsg("failed_connect_wsurl") % url_jobaction
 	except (AttributeError, ExpatError):
 		return 'error', _getmsg("ws_notready_url") % url_jobaction
@@ -1902,6 +1917,9 @@ def doFlowInstanceAction(action, varlist, flowid):
 			return 'error', message[0].childNodes[0].nodeValue
 	except (AttributeError, ExpatError):
 		return 'error', _getmsg("ws_notready_url") % url_flowaction 
+
+def printAuthError():
+	print("Error 401: Invalid session")
 
 def main(argv):
 	"""
