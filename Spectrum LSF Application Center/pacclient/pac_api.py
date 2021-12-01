@@ -907,7 +907,8 @@ def saveToken(url, token,jtoken):
 		ff.close
 
 def getToken():
-	token=''
+	return os.getenv('CLUSTER_URL', ''), os.getenv('LSF_TOKEN', '')
+	"""token=''
 	url=''
 	if os.name == 'nt':	
 		fpath=os.environ['HOMEPATH']
@@ -932,7 +933,7 @@ def getToken():
 			return url, token
 		else:
 			#return url, 'platform_token='+token
-			return url, token
+			return url, token"""
 
 def getFileSeparator():
 	if os.name == 'nt':
